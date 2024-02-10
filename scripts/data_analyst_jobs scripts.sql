@@ -43,9 +43,11 @@ WHERE review_count BETWEEN 500 AND 1000;
 
 SELECT location AS state, AVG(star_rating) AS avg_rating
 FROM data_analyst_jobs
-GROUP BY location;
+WHERE star_rating IS NOT NULL
+GROUP BY state
+ORDER BY avg_rating DESC;
 
--- Answer: Kansas has the highest rating
+-- Answer: Nebraska has the highest rating
 
 -- 7.	Select unique job titles from the data_analyst_jobs table. How many are there?
 
@@ -58,7 +60,7 @@ FROM data_analyst_jobs;
 
 SELECT DISTINCT(title)
 FROM data_analyst_jobs
-WHERE location = 'CA';
+WHERE location IN ('CA');
 
 -- Answer: There are 230 unique job titles in CA
 
@@ -67,30 +69,34 @@ WHERE location = 'CA';
 SELECT DISTINCT(company), AVG(star_rating)
 FROM data_analyst_jobs
 WHERE review_count >5000
+AND company IS NOT NULL
 GROUP BY company;
 
--- Answer: There are 41 companies that have more than 5000 review across all locations.
+-- Answer: There are 40 companies that have more than 5000 review across all locations.
 
 -- 10.	Add the code to order the query in #9 from highest to lowest average star rating. Which company with more than 5000 reviews across all locations in the dataset has the highest star rating? What is that rating?
 
-SELECT DISTINCT(company), AVG(star_rating), review_count
+SELECT company, AVG(star_rating)
 FROM data_analyst_jobs
 WHERE review_count >5000
 GROUP BY company
-ORDER BY review_count;
+ORDER BY AVG(star_rating) DESC;
 
--- Answer:
+-- Answer: There are 6 companies with the highest rating of 4.199
 
 -- 11.	Find all the job titles that contain the word ‘Analyst’. How many different job titles are there? 
 
-SELECT
+SELECT DISTINCT(title)
 FROM data_analyst_jobs
+WHERE title ilike '%Analyst%';
 
--- Answer:
+-- Answer: There are 774 job titles that contain 'Analyst'
 
 -- 12.	How many different job titles do not contain either the word ‘Analyst’ or the word ‘Analytics’? What word do these positions have in common?
 
-SELECT
+SELECT title
 FROM data_analyst_jobs
+WHERE title NOT ilike '%analyst%'
+AND title NOT ilike '%analytics%';
 
--- Answer:
+-- Answer:There are 4 different job titles that do not contain analyst or analytics. They have Tableau in common.
